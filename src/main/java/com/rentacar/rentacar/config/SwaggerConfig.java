@@ -28,7 +28,7 @@ public class SwaggerConfig {
                         .description("Rent A Car Description")
                         .version("1.0")
                         .contact(new Contact()
-                                .name("Selahattin Utku Çolak")
+                                .name("Selahattin Utku Colak")
                                 .email("x.com")
                                 .url("x.com"))
                         .license(new License()
