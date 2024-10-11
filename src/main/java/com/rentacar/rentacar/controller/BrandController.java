@@ -19,11 +19,31 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
 
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Brand> createBrand(@RequestBody Brand brand) {
         return new ResponseEntity<>(brandService.createBrand(brand), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteBrand(@RequestParam("id") Long id) {
+        brandService.deleteBrand(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public ResponseEntity<Brand> getBrand(@RequestParam("id") Long id) {
+        return new ResponseEntity<>(brandService.getBrand(id), HttpStatus.OK);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public ResponseEntity<List<Brand>> getAllBrandList() {
+        return new ResponseEntity<>(brandService.getAllBrandList(), HttpStatus.OK);
+    }
+
 }
 
 

@@ -35,12 +35,10 @@ public class Car {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transmissionType")
-    @Schema(type = "string", example = "AUTOMATIC,MANUAL")
     private TransmissionType transmissionType; // Şanzıman türü (OTOMATİK veya MANUEL)
 
     @Enumerated(EnumType.STRING)
     @Column(name = "fuelType")
-    @Schema(type = "string", example = "GASOLINE, DIESEL")
     private FuelType fuelType; // Yakıt türü
 
     private Boolean active;

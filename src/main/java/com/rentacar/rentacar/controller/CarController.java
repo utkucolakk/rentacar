@@ -47,15 +47,16 @@ public class CarController {
 
     @PutMapping("active/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Boolean> activeCar(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(carService.activeOrDeActiveCar(id, true), HttpStatus.OK);
-
+    public ResponseEntity<Void> activeCar(@PathVariable("id") Long id) {
+        carService.activeOrDeActiveCar(id, true);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("deActive/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Boolean > deActiveCar(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(carService.activeOrDeActiveCar(id, false), HttpStatus.OK);
+    public ResponseEntity<Void > deActiveCar(@PathVariable("id") Long id) {
+        carService.activeOrDeActiveCar(id, false);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")

@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "rentals")
+@Table(name = "rental")
 @Getter
 @Setter
 public class CarRental {
@@ -33,6 +33,6 @@ public class CarRental {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rentalEndTime;
 
-
+    private int quantity;
 
 }

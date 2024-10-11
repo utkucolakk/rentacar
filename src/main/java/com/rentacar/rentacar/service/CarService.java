@@ -35,7 +35,7 @@ public class CarService {
     }
 
     public Car getCar(Long id) {
-        return carRepository.findById(id).orElseThrow(() -> new CarNotFoundException("Car Not Found id : " + id));
+        return carRepository.getActiveCarById(id).orElseThrow(() -> new CarNotFoundException("Car Not Found id : " + id));
     }
 
     private String saveFile(MultipartFile file, String carName) {
@@ -53,8 +53,8 @@ public class CarService {
         return filePath.toString();
     }
 
-    public boolean activeOrDeActiveCar(Long id, boolean isActive) {
-        return carRepository.updateCarActive(isActive, id);
+    public void activeOrDeActiveCar(Long id, boolean isActive) {
+        carRepository.updateCarActive(isActive, id);
     }
 
     public void deleteCar(Long id) {
@@ -62,6 +62,6 @@ public class CarService {
     }
 
     public List<Car> getAllCarList() {
-        return carRepository.findAll();
+        return carRepository.getAllActiveCarList();
     }
 }

@@ -1,9 +1,12 @@
 package com.rentacar.rentacar.service;
 
+import com.rentacar.rentacar.exception.BrandNotFoundException;
 import com.rentacar.rentacar.model.Brand;
 import com.rentacar.rentacar.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class BrandService {
@@ -13,6 +16,18 @@ public class BrandService {
 
     public Brand createBrand(Brand brand) {
         return brandRepository.save(brand);
+    }
+
+    public void deleteBrand(Long id) {
+        brandRepository.deleteById(id);
+    }
+
+    public Brand getBrand(Long id) {
+        return brandRepository.findById(id).orElseThrow( () -> new BrandNotFoundException("Brand not found id : " + id));
+    }
+
+    public List<Brand> getAllBrandList() {
+        return brandRepository.findAll();
     }
 }
 
