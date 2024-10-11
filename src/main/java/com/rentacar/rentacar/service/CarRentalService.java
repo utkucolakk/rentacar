@@ -45,7 +45,7 @@ public class CarRentalService {
             Car car = carRepository.getActiveCarById(carRentalRequestInfo.getCarId()).orElseThrow(() -> new CarNotFoundException("car not found id :" + carRentalRequestInfo.getCarId()));
             Double rentalCost = carRentalRequestInfo.getQuantity() * car.getDailyPrice();
             carRental.setRentalCost(rentalCost);
-            
+
             carRental.setQuantity(carRentalRequestInfo.getQuantity());
             carRental.setCarId(carRentalRequestInfo.getCarId());
             carRental.setCustomerId(carRentalRequest.getCustomerId());
