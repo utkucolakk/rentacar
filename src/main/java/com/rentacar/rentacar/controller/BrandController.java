@@ -27,14 +27,14 @@ public class BrandController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Void> deleteBrand(@RequestParam("id") Long id) {
+    public ResponseEntity<Void> deleteBrand(@PathVariable("id") Long id) {
         brandService.deleteBrand(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<Brand> getBrand(@RequestParam("id") Long id) {
+    public ResponseEntity<Brand> getBrand(@PathVariable("id") Long id) {
         return new ResponseEntity<>(brandService.getBrand(id), HttpStatus.OK);
     }
 

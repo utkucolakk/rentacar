@@ -2,17 +2,21 @@ package com.rentacar.rentacar.service;
 
 import com.rentacar.rentacar.dto.CarRentalRequest;
 import com.rentacar.rentacar.dto.RentalCarInfo;
+import com.rentacar.rentacar.enums.VehicleDeliveryPoint;
+import com.rentacar.rentacar.enums.VehiclePickupPoint;
 import com.rentacar.rentacar.exception.CarNotFoundException;
 import com.rentacar.rentacar.model.Car;
 import com.rentacar.rentacar.model.CarRental;
 import com.rentacar.rentacar.repository.CarRentalRepository;
 import com.rentacar.rentacar.repository.CarRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -63,4 +67,39 @@ public class CarRentalService {
 
         return true;
     }
+
+//---------------------------------------------------------------------------------------------------
+@Transactional  // Bu metot bir transaction içinde çalışacak
+public boolean processRental(RentalCarInfo rentalCarInfo) {
+    Optional<Car> carOptional = carRepository.findById(rentalCarInfo.getCarId());
+    if (carOptional.isPresent()) {
+        Car car = carOptional.get();
+
+        // Eğer araç mevcutsa, availableCount'u azalt
+        if (car.getAvailableCount() > 0) {
+            car.setAvailableCount(car.getAvailableCount() - 1);
+            carRepository.save(car);
+
+            // Kiralama bilgisini kaydet
+            CarRental carRental = new CarRental();
+            carRental.setCustomerId(rentalCarInfo.getCarId());
+            carRental.setCarId(rentalCarInfo.getCarId());
+            carRental.setRentalCost(rentalCarInfo.getQuantity() * car.getDailyPrice());
+
+            // Tarih bilgileri
+            carRental.setRentalStartTime(rentalCarInfo.getRentalStartTime().atStartOfDay());
+            carRental.setRentalEndTime(rentalCarInfo.getRentalEndTime().atStartOfDay());
+
+            // Enum'ları kaydet
+            carRental.setVehiclePickupPoint(VehiclePickupPoint.valueOf(rentalCarInfo.getVehiclePickupPoint()));
+            carRental.setVehicleDeliveryPoint(VehicleDeliveryPoint.valueOf(rentalCarInfo.getVehicleDeliveryPoint()));
+
+            carRentalRepository.save(carRental);
+
+            return true;
+        }
+    }
+    return false;
+    }
+
 }

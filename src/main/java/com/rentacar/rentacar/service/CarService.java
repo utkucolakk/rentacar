@@ -39,6 +39,7 @@ public class CarService {
     }
 
     private String saveFile(MultipartFile file, String carName) {
+        carName = carName.replaceAll("\\s", "");
         String fileName = carName + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
         Path uploadPath = Path.of(UPLOAD_DIR);
         Path filePath;

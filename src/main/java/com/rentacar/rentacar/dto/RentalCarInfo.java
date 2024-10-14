@@ -10,10 +10,10 @@ import java.time.LocalDate;
 public class RentalCarInfo {
 
     private Long carId;
-    private int quantity;
     private LocalDate rentalStartTime;
     private LocalDate rentalEndTime;
-
-
-
+    private String vehiclePickupPoint;
+    private String vehicleDeliveryPoint;
+    private Double rentalCost;
+    private int quantity;
 }

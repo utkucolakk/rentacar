@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface  CarRepository extends JpaRepository<Car, Long> {
 
-    @Query("SELECT c FROM Car c WHERE c.brandId = :brandId")
+    @Query("SELECT c FROM Car c WHERE c.brandId = :brandId AND c.active = true")
     List<Car> findCarListByBrandId(@Param("brandId") Long brandId);
 
     @Modifying

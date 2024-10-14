@@ -4,6 +4,8 @@ package com.rentacar.rentacar.model;
 //import com.rentacar.rentacar.enums.FuelType;
 import com.rentacar.rentacar.enums.FuelType;
 import com.rentacar.rentacar.enums.TransmissionType;
+import com.rentacar.rentacar.enums.VehicleDeliveryPoint;
+import com.rentacar.rentacar.enums.VehiclePickupPoint;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
