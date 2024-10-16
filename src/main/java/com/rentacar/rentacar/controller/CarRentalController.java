@@ -4,6 +4,8 @@ import com.rentacar.rentacar.dto.CarRentalRequest;
 import com.rentacar.rentacar.dto.RentalCarInfo;
 import com.rentacar.rentacar.enums.VehicleDeliveryPoint;
 import com.rentacar.rentacar.enums.VehiclePickupPoint;
+import com.rentacar.rentacar.model.Brand;
+import com.rentacar.rentacar.model.Car;
 import com.rentacar.rentacar.service.CarRentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class CarRentalController {
         return new ResponseEntity<>(carRentalService.doCarRental(carRentalRequest), HttpStatus.OK);
     }
 
+
+
     @GetMapping("/pickup-points")
     public List<VehiclePickupPoint> getPickupPoints() {
         return Arrays.asList(VehiclePickupPoint.values());
@@ -38,19 +42,5 @@ public class CarRentalController {
     }
 
 
-    //---------------------------------------------------------------------------------------------
-
-    @PostMapping("/rent")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<String> rentCar(@RequestBody RentalCarInfo rentalCarInfo) {
-        // Veritabanında kiralama işlemini yap
-        boolean success = carRentalService.processRental(rentalCarInfo);
-
-        if (success) {
-            return ResponseEntity.ok("Car rented successfully!");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to rent car.");
-        }
-    }
 
 }

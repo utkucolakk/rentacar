@@ -1,5 +1,7 @@
 package com.rentacar.rentacar.dto;
 
+import com.rentacar.rentacar.enums.VehicleDeliveryPoint;
+import com.rentacar.rentacar.enums.VehiclePickupPoint;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,11 +11,12 @@ import java.time.LocalDate;
 @Setter
 public class RentalCarInfo {
 
+    private Long customerId;
     private Long carId;
     private LocalDate rentalStartTime;
     private LocalDate rentalEndTime;
-    private String vehiclePickupPoint;
-    private String vehicleDeliveryPoint;
+    private VehiclePickupPoint vehiclePickupPoint;
+    private VehicleDeliveryPoint vehicleDeliveryPoint;
     private Double rentalCost;
     private int quantity;
 }
