@@ -36,13 +36,15 @@ public class CarController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<Car> getCar(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<>(carService.getCar(id), HttpStatus.OK);
+        Car car = carService.getCarById(id);
+        return new ResponseEntity<>(car, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+
+    @PutMapping(value = "/update",  consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Car> updateCar(@RequestPart(value = "file", required = false)MultipartFile file,
-                                         @ModelAttribute Car car) {
+    public ResponseEntity<Car> updateCar(@RequestPart(value = "file", required = false) MultipartFile file,
+                                         @RequestPart("car") Car car) {
 
         return new ResponseEntity<>(carService.createCar(file, car), HttpStatus.OK);
     }

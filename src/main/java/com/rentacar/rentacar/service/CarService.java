@@ -26,6 +26,9 @@ public class CarService {
         if (Objects.nonNull(file)) {
             String imagePath = saveFile(file, car.getName());
             car.setImage(imagePath);
+        }else {
+            Car existCar = carRepository.findById(car.getId()).orElseThrow(() -> new CarNotFoundException("car not found id :" + car.getId()));
+            car.setImage(existCar.getImage());
         }
         return carRepository.save(car);
     }
@@ -34,9 +37,10 @@ public class CarService {
         return carRepository.findCarListByBrandId(brandId);
     }
 
-    public Car getCar(Long id) {
-        return carRepository.getActiveCarById(id).orElseThrow(() -> new CarNotFoundException("Car Not Found id : " + id));
+   public Car getCar(Long id) {
+        return carRepository.getCarById(id).orElseThrow(() -> new CarNotFoundException("Car Not Found id : " + id));
     }
+
 
     private String saveFile(MultipartFile file, String carName) {
         carName = carName.replaceAll("\\s", "");
@@ -63,6 +67,15 @@ public class CarService {
     }
 
     public List<Car> getAllCarList() {
-        return carRepository.getAllActiveCarList();
+        return carRepository.getAllCarList();
     }
+
+
+    public Car getCarById(Long id) {
+        return carRepository.findById(id)
+            .orElseThrow(() -> new CarNotFoundException("Car not found with id: " + id));
+    }
+
+
+
 }

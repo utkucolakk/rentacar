@@ -2,14 +2,11 @@ package com.rentacar.rentacar.service;
 
 import com.rentacar.rentacar.dto.CarRentalRequest;
 import com.rentacar.rentacar.dto.RentalCarInfo;
-import com.rentacar.rentacar.enums.VehicleDeliveryPoint;
-import com.rentacar.rentacar.enums.VehiclePickupPoint;
 import com.rentacar.rentacar.exception.CarNotFoundException;
 import com.rentacar.rentacar.model.Car;
 import com.rentacar.rentacar.model.CarRental;
 import com.rentacar.rentacar.repository.CarRentalRepository;
 import com.rentacar.rentacar.repository.CarRepository;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -52,7 +48,7 @@ public class CarRentalService {
             CarRental carRental = new CarRental();
 
             // Aracı veritabanından al
-            Car car = carRepository.getActiveCarById(carRentalInfo.getCarId())
+            Car car = carRepository.getCarById(carRentalInfo.getCarId())
                     .orElseThrow(() -> new CarNotFoundException("Car not found with id: " + carRentalInfo.getCarId()));
 
             // Kiralama maliyetini gün sayısına göre hesaplama

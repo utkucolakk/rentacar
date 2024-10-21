@@ -1,5 +1,6 @@
 package com.rentacar.rentacar.service;
 
+import com.rentacar.rentacar.exception.BrandDuplicateException;
 import com.rentacar.rentacar.exception.BrandNotFoundException;
 import com.rentacar.rentacar.model.Brand;
 import com.rentacar.rentacar.repository.BrandRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BrandService {
@@ -15,6 +17,10 @@ public class BrandService {
     private BrandRepository brandRepository;
 
     public Brand createBrand(Brand brand) {
+        Optional<Brand> optionalBrand = brandRepository.findBrandByName(brand.getName());
+        if (optionalBrand.isPresent()) {
+            throw new BrandDuplicateException("Brand is already defined : " + brand.getName());
+        }
         return brandRepository.save(brand);
     }
 
@@ -29,6 +35,7 @@ public class BrandService {
     public List<Brand> getAllBrandList() {
         return brandRepository.findAll();
     }
+
 }
 
 
