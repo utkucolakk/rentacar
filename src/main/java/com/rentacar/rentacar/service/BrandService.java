@@ -1,12 +1,15 @@
 package com.rentacar.rentacar.service;
 
+import com.rentacar.rentacar.exception.BrandDeleteException;
 import com.rentacar.rentacar.exception.BrandDuplicateException;
 import com.rentacar.rentacar.exception.BrandNotFoundException;
 import com.rentacar.rentacar.model.Brand;
 import com.rentacar.rentacar.repository.BrandRepository;
+import com.rentacar.rentacar.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +18,9 @@ public class BrandService {
 
     @Autowired
     private BrandRepository brandRepository;
+
+    @Autowired
+    private CarRepository carRepository;
 
     public Brand createBrand(Brand brand) {
         Optional<Brand> optionalBrand = brandRepository.findBrandByName(brand.getName());
@@ -25,6 +31,10 @@ public class BrandService {
     }
 
     public void deleteBrand(Long id) {
+        Long carCountOfBrand = carRepository.getCarCountOfBrandId(id);
+        if (carCountOfBrand > 0) {
+            throw new BrandDeleteException("you can not delete this brand because brand has " + carCountOfBrand + " car");
+        }
         brandRepository.deleteById(id);
     }
 
@@ -33,7 +43,13 @@ public class BrandService {
     }
 
     public List<Brand> getAllBrandList() {
-        return brandRepository.findAll();
+        List<Brand> brandList = brandRepository.findAll();
+        brandList.sort(Comparator.comparingLong(Brand::getId));
+        return brandList;
+    }
+
+    public Brand updateBrand(Brand brand) {
+        return brandRepository.save(brand);
     }
 
 }

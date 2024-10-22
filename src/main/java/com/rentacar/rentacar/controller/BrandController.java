@@ -44,6 +44,10 @@ public class BrandController {
         return new ResponseEntity<>(brandService.getAllBrandList(), HttpStatus.OK);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Brand> updateBrand(@RequestBody Brand brand) {
+        return new ResponseEntity<>(brandService.updateBrand(brand), HttpStatus.OK);
+    }
 }
 
 

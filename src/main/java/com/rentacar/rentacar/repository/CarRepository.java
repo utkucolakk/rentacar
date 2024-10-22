@@ -28,9 +28,8 @@ public interface  CarRepository extends JpaRepository<Car, Long> {
     @Query("SELECT c FROM Car c WHERE c.id =:id")
     Optional<Car> getCarById(@Param("id") Long id);
 
-
-   //@Query("SELECT c FROM Car c WHERE c.active = true AND c.id = id")
-    //Optional<Car> getActiveCarById(@Param("id") Long id);
+    @Query("SELECT COUNT(c) FROM Car c WHERE c.brandId = :brandId")
+    Long getCarCountOfBrandId(@Param("brandId") Long brandId);
 
 
 
