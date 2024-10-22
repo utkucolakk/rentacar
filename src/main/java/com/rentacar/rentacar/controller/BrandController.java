@@ -48,6 +48,7 @@ public class BrandController {
     public ResponseEntity<Brand> updateBrand(@RequestBody Brand brand) {
         return new ResponseEntity<>(brandService.updateBrand(brand), HttpStatus.OK);
     }
+
 }
 
 

@@ -7,10 +7,16 @@ import com.rentacar.rentacar.model.Car;
 import com.rentacar.rentacar.model.CarRental;
 import com.rentacar.rentacar.repository.CarRentalRepository;
 import com.rentacar.rentacar.repository.CarRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -25,6 +31,12 @@ public class CarRentalService {
 
     @Autowired
     private CarRentalRepository carRentalRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String emailFrom;
 
     private void carUnitStockCheck(List<RentalCarInfo> rentalCarInfoList) {
         rentalCarInfoList.forEach(carInfo -> {
@@ -90,8 +102,24 @@ public class CarRentalService {
             carRepository.save(car);
         });
 
+        sendMail();
         return true;
     }
 
 
+    public void sendMail() {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        try {
+            helper.setFrom(emailFrom, "Rent a Car ");
+            helper.setTo("x");
+            helper.setSubject("TEST");
+            String content = "<p>Hello,</p><p>This is a test email sent from Spring Boot.</p>";
+
+            helper.setText(content, true);
+            mailSender.send(message);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

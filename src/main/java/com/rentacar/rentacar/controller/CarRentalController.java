@@ -42,5 +42,11 @@ public class CarRentalController {
     }
 
 
+    @GetMapping("/test")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> test() {
+        carRentalService.sendMail();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

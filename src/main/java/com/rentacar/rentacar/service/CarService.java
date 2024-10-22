@@ -63,6 +63,7 @@ public class CarService {
     }
 
     public void deleteCar(Long id) {
+        //TODO delete image in path as well
         carRepository.deleteById(id);
     }
 
