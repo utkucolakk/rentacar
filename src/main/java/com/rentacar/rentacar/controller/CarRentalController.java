@@ -1,11 +1,8 @@
 package com.rentacar.rentacar.controller;
 
 import com.rentacar.rentacar.dto.CarRentalRequest;
-import com.rentacar.rentacar.dto.RentalCarInfo;
 import com.rentacar.rentacar.enums.VehicleDeliveryPoint;
 import com.rentacar.rentacar.enums.VehiclePickupPoint;
-import com.rentacar.rentacar.model.Brand;
-import com.rentacar.rentacar.model.Car;
 import com.rentacar.rentacar.service.CarRentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,11 +39,11 @@ public class CarRentalController {
     }
 
 
-    @GetMapping("/test")
+   /* @GetMapping("/test")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> test() {
-        carRentalService.sendMail();
+        carRentalService.sendMail("", "", 0d);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    }*/
 
 }

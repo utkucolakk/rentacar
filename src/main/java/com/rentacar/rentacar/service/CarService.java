@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
@@ -63,7 +65,12 @@ public class CarService {
     }
 
     public void deleteCar(Long id) {
-        //TODO delete image in path as well
+       Car car = carRepository.findById(id).orElseThrow(() -> new CarNotFoundException(id + "car is not found"));
+       try {
+           Files.delete(Paths.get(car.getImage()));
+       } catch (IOException e) {
+           throw new RuntimeException(e);
+       }
         carRepository.deleteById(id);
     }
 

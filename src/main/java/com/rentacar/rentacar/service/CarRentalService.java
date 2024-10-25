@@ -7,16 +7,13 @@ import com.rentacar.rentacar.model.Car;
 import com.rentacar.rentacar.model.CarRental;
 import com.rentacar.rentacar.repository.CarRentalRepository;
 import com.rentacar.rentacar.repository.CarRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import com.rentacar.rentacar.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -35,6 +32,9 @@ public class CarRentalService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @Value("${spring.mail.username}")
     private String emailFrom;
 
@@ -51,6 +51,8 @@ public class CarRentalService {
     }
     public boolean doCarRental(CarRentalRequest carRentalRequest) {
         log.info("Car rental request time {} customer: {}", LocalDateTime.now(), carRentalRequest.getCustomerId());
+
+       // List<Double> orderTotalCostList = new ArrayList<>();
 
         // Araç stok kontrolü
         carUnitStockCheck(carRentalRequest.getCarRentalList());
@@ -78,6 +80,9 @@ public class CarRentalService {
             Double rentalCost = daysBetween * car.getDailyPrice();
             carRental.setRentalCost(rentalCost);
 
+           //orderTotalCostList.add(rentalCost);
+           //carRental.setRentalCost(rentalCost);
+
             // Kullanıcıdan gelen tarih bilgilerini kullanarak başlangıç ve bitiş zamanını ayarla
             carRental.setRentalStartTime(rentalStart.atStartOfDay());  // Kullanıcıdan gelen tarih
             carRental.setRentalEndTime(rentalEnd.atStartOfDay());  // Kullanıcıdan gelen tarih
@@ -102,24 +107,28 @@ public class CarRentalService {
             carRepository.save(car);
         });
 
-        sendMail();
+       // Customer customer = customerRepository.findById(carRentalRequest.getCustomerId())
+       //         .orElseThrow(() ->  new CustomerNotFoundException(carRentalRequest.getCustomerId() + "customer not found!"));
+
+       // Double orderTotalCost = orderTotalCostList.stream().mapToDouble(Double::doubleValue).sum();
+       // sendMail(customer.getEmail(), customer.getFirstName(), orderTotalCost );
         return true;
     }
 
 
-    public void sendMail() {
+   /* public void sendMail(String emailTo, String firstName, double rentalCost ) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
             helper.setFrom(emailFrom, "Rent a Car ");
-            helper.setTo("x");
-            helper.setSubject("TEST");
-            String content = "<p>Hello,</p><p>This is a test email sent from Spring Boot.</p>";
+            helper.setTo(emailTo);
+            helper.setSubject("Hello " + firstName + " Your Rent a car" );
+            String content = "<p>" + "Hello " + firstName + "</p><p>The rentalCost is" + rentalCost + "</p>";
 
             helper.setText(content, true);
             mailSender.send(message);
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 }

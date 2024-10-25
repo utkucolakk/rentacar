@@ -1,6 +1,5 @@
 package com.rentacar.rentacar.dto;
 
-import com.rentacar.rentacar.model.CarRental;
 import lombok.Getter;
 import lombok.Setter;
 
