@@ -1,5 +1,6 @@
 package com.rentacar.rentacar.controller;
 
+import com.rentacar.rentacar.dto.CarRentalDto;
 import com.rentacar.rentacar.dto.CarRentalRequest;
 import com.rentacar.rentacar.enums.VehicleDeliveryPoint;
 import com.rentacar.rentacar.enums.VehiclePickupPoint;
@@ -25,6 +26,15 @@ public class CarRentalController {
     public ResponseEntity<Boolean> doCarRental(@RequestBody CarRentalRequest carRentalRequest) {
         return new ResponseEntity<>(carRentalService.doCarRental(carRentalRequest), HttpStatus.OK);
     }
+
+
+
+        @GetMapping("/history/{customerId}")
+        public ResponseEntity<List<CarRentalDto>> getRentalHistory(@PathVariable Long customerId) {
+            List<CarRentalDto> rentalHistory = carRentalService.getRentalHistoryByCustomerId(customerId);
+            return ResponseEntity.ok(rentalHistory);
+        }
+
 
 
 

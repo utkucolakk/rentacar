@@ -8,11 +8,13 @@ import java.util.List;
 public interface CarRentalRepository extends JpaRepository<CarRental, Long> {
 
 
+        List<CarRental> findByCustomerId(Long customerId);
+
         // Eğer car_id'ye göre sorgulama yapmak isterseniz
         List<CarRental> findByCarId(Long carId);
 
         // Eğer customer_id'ye göre sorgulama yapmak isterseniz
-        List<CarRental> findByCustomerId(Long customerId);
+
 
 
 

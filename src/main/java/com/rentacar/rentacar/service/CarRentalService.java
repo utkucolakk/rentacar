@@ -1,5 +1,6 @@
 package com.rentacar.rentacar.service;
 
+import com.rentacar.rentacar.dto.CarRentalDto;
 import com.rentacar.rentacar.dto.CarRentalRequest;
 import com.rentacar.rentacar.dto.RentalCarInfo;
 import com.rentacar.rentacar.exception.CarNotFoundException;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -113,6 +115,29 @@ public class CarRentalService {
        // Double orderTotalCost = orderTotalCostList.stream().mapToDouble(Double::doubleValue).sum();
        // sendMail(customer.getEmail(), customer.getFirstName(), orderTotalCost );
         return true;
+    }
+
+    public List<CarRentalDto> getRentalHistoryByCustomerId(Long customerId) {
+        List<CarRental> rentals = carRentalRepository.findByCustomerId(customerId);
+
+        return rentals.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private CarRentalDto convertToDTO(CarRental carRental) {
+        // carId ile ilgili Car nesnesini bul
+        Car car = carRepository.findById(carRental.getCarId()).orElse(null);
+
+        // Car bulunamazsa ismi "Unknown" olarak ayarla
+        String carName = (car != null) ? car.getName() : "Unknown";
+
+        return new CarRentalDto(
+                carName, // Araç ismi
+                carRental.getRentalStartTime(), // Kiralama başlangıç zamanı
+                carRental.getRentalEndTime(), // Kiralama bitiş zamanı
+                carRental.getRentalCost() // Kiralama maliyeti
+        );
     }
 
 
