@@ -31,4 +31,6 @@ public class Customer {
     private String password;
 
     private String roles;
+
+
 }
