@@ -10,7 +10,11 @@ import java.time.LocalDateTime;
 @Setter
 public class CarRentalDto {
 
+    private Long rentalId;  // Yeni rentalId alanı
+
     private String carName; // Kiralanan araç ismi
+
+    private String customerEmail; // Müşteri adı yerine e-posta
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime rentalStartTime; // Kiralama başlangıç zamanı
@@ -21,14 +25,33 @@ public class CarRentalDto {
     private Double rentalCost; // Kiralama maliyeti
 
     // Constructor
-    public CarRentalDto(String carName, LocalDateTime rentalStartTime, LocalDateTime rentalEndTime, Double rentalCost) {
+    public CarRentalDto(Long rentalId, String carName, String customerEmail, LocalDateTime rentalStartTime, LocalDateTime rentalEndTime, Double rentalCost) {
+        this.rentalId = rentalId;
         this.carName = carName;
+        this.customerEmail = customerEmail; // Bu satırı ekleyin
         this.rentalStartTime = rentalStartTime;
         this.rentalEndTime = rentalEndTime;
         this.rentalCost = rentalCost;
     }
 
     // Getter ve Setter'lar
+
+    public Long getRentalId() {
+        return rentalId;
+    }
+
+    public void setRentalId(Long rentalId) {
+        this.rentalId = rentalId;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
     public String getCarName() {
         return carName;
     }

@@ -6,6 +6,7 @@ import com.rentacar.rentacar.dto.RentalCarInfo;
 import com.rentacar.rentacar.exception.CarNotFoundException;
 import com.rentacar.rentacar.model.Car;
 import com.rentacar.rentacar.model.CarRental;
+import com.rentacar.rentacar.model.Customer;
 import com.rentacar.rentacar.repository.CarRentalRepository;
 import com.rentacar.rentacar.repository.CarRepository;
 import com.rentacar.rentacar.repository.CustomerRepository;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,19 +128,29 @@ public class CarRentalService {
     }
 
     private CarRentalDto convertToDTO(CarRental carRental) {
-        // carId ile ilgili Car nesnesini bul
+        // Car nesnesini al ve null kontrolü yap
         Car car = carRepository.findById(carRental.getCarId()).orElse(null);
-
-        // Car bulunamazsa ismi "Unknown" olarak ayarla
         String carName = (car != null) ? car.getName() : "Unknown";
 
+        // Customer nesnesini al ve null kontrolü yap
+        Customer customer = customerRepository.findById(carRental.getCustomerId()).orElse(null);
+        String customerEmail = (customer != null) ? customer.getEmail() : "Unknown";
+
+        // Null kontrolü yaparak tarihleri al
+        LocalDateTime rentalStartTime = Optional.ofNullable(carRental.getRentalStartTime()).orElse(LocalDateTime.now());
+        LocalDateTime rentalEndTime = Optional.ofNullable(carRental.getRentalEndTime()).orElse(LocalDateTime.now());
+
+        // CarRentalDto nesnesini dönüştür
         return new CarRentalDto(
-                carName, // Araç ismi
-                carRental.getRentalStartTime(), // Kiralama başlangıç zamanı
-                carRental.getRentalEndTime(), // Kiralama bitiş zamanı
-                carRental.getRentalCost() // Kiralama maliyeti
+                carRental.getId(), // rentalId ekleniyor
+                carName,
+                customerEmail, // Email, String olmalı
+                rentalStartTime,
+                rentalEndTime, // Tarih, LocalDateTime olmalı
+                carRental.getRentalCost()
         );
     }
+
 
 
    /* public void sendMail(String emailTo, String firstName, double rentalCost ) {
@@ -156,4 +168,57 @@ public class CarRentalService {
             throw new RuntimeException(e);
         }
     }*/
+
+
+
+
+    public void markAsReturned(Long rentalId) {
+        CarRental carRental = carRentalRepository.findById(rentalId)
+                .orElseThrow(() -> new RuntimeException("Car Rental not found"));
+
+        Car car = carRepository.findById(carRental.getCarId())
+                .orElseThrow(() -> new CarNotFoundException("Car not found"));
+
+        // Aracın stokunu artır
+        car.setAvailableCount(car.getAvailableCount() + carRental.getQuantity());
+        carRepository.save(car);
+
+        // Kiralamanın durumu güncellenebilir (Opsiyonel: Ek bir durum alanı ekleyebilirsiniz)
+        carRentalRepository.delete(carRental);  // Teslim alındıysa kaydı silebiliriz veya durumunu güncelleyebiliriz
+    }
+
+
+    public List<CarRentalDto> getOngoingRentals() {
+        // Teslim edilmemiş araç kiralamalarını veritabanından al
+        List<CarRental> ongoingRentals = carRentalRepository.findByRentalEndTimeAfter(LocalDateTime.now());
+
+        // DTO'ya dönüştür
+        return ongoingRentals.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
+    public boolean receiveCar(Long rentalId) {
+        // Kiralamayı ID ile bul
+        Optional<CarRental> optionalRental = carRentalRepository.findById(rentalId);
+        if (optionalRental.isPresent()) {
+            CarRental carRental = optionalRental.get();
+
+            // Aracı alınan olarak işaretle ve stok miktarını güncelle
+            Car car = carRepository.findById(carRental.getCarId())
+                    .orElseThrow(() -> new CarNotFoundException("Car not found with id: " + carRental.getCarId()));
+
+            car.setAvailableCount(car.getAvailableCount() + carRental.getQuantity());
+            car.setActive(true); // Stok artarsa aracı tekrar aktif yap
+            carRepository.save(car);
+
+            // Kiralamayı veritabanından sil
+            carRentalRepository.deleteById(rentalId);
+
+            return true;
+        }
+        return false;
+    }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-
 @RestController
 @RequestMapping("/car-rental")
 public class CarRentalController {
@@ -55,5 +54,23 @@ public class CarRentalController {
         carRentalService.sendMail("", "", 0d);
         return new ResponseEntity<>(HttpStatus.OK);
     }*/
+
+
+    @GetMapping("/admin/ongoing-rentals")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<CarRentalDto>> getOngoingRentals() {
+        List<CarRentalDto> ongoingRentals = carRentalService.getOngoingRentals();
+        return ResponseEntity.ok(ongoingRentals);
+    }
+
+
+
+    @PutMapping("/admin/receive-car/{rentalId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> receiveCar(@PathVariable Long rentalId) {
+        carRentalService.receiveCar(rentalId);
+        return ResponseEntity.ok().build();
+    }
+
 
 }
