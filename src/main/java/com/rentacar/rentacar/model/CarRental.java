@@ -43,6 +43,11 @@ public class CarRental {
     @Column(name = "vehicle_delivery_point")
     private VehicleDeliveryPoint vehicleDeliveryPoint;
 
+    @Column(name = "status")
+    private String status;
+
     private int quantity;
+
+
 
 }

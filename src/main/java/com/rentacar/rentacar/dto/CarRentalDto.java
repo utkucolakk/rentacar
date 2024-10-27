@@ -24,14 +24,18 @@ public class CarRentalDto {
     
     private Double rentalCost; // Kiralama maliyeti
 
+    private String status;
+
     // Constructor
-    public CarRentalDto(Long rentalId, String carName, String customerEmail, LocalDateTime rentalStartTime, LocalDateTime rentalEndTime, Double rentalCost) {
+    public CarRentalDto(Long rentalId, String carName, String customerEmail, LocalDateTime rentalStartTime, LocalDateTime rentalEndTime, Double rentalCost, String status) {
         this.rentalId = rentalId;
         this.carName = carName;
         this.customerEmail = customerEmail; // Bu satırı ekleyin
         this.rentalStartTime = rentalStartTime;
         this.rentalEndTime = rentalEndTime;
         this.rentalCost = rentalCost;
+        this.status = status;
+
     }
 
     // Getter ve Setter'lar
@@ -82,6 +86,14 @@ public class CarRentalDto {
 
     public void setRentalCost(Double rentalCost) {
         this.rentalCost = rentalCost;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

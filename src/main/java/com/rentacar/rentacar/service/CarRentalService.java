@@ -147,7 +147,8 @@ public class CarRentalService {
                 customerEmail, // Email, String olmalı
                 rentalStartTime,
                 rentalEndTime, // Tarih, LocalDateTime olmalı
-                carRental.getRentalCost()
+                carRental.getRentalCost(),
+                carRental.getStatus()
         );
     }
 
